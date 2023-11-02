@@ -1,3 +1,6 @@
+var listadoClientes = []
+var clientesEnPantalla = document.querySelector("#listado-clientes")
+
 // Selectores y Listeners
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -26,6 +29,26 @@ document.addEventListener("DOMContentLoaded", () => {
     btnSubmit.classList.add("opacity-50")
 
     // Listeners
+
+    // Listener para el botón de añadir
+    btnSubmit.addEventListener("click", () => {
+    anadirHTML()
+  })
+
+    // Listener para remover clientes
+    mensajesEnPantalla.addEventListener("click", (e) => {
+    if (e.target.className == "borrar-mensaje") {
+      var indiceLi = parseInt(e.target.parentElement.dataset.indice)
+      // Eliminamos el mensaje del array
+      arrayMensajes.splice(indiceLi, 1)
+      // Actualizamos el localStorage tras haber eliminado el mensaje
+      localStorage.setItem("Clientes", JSON.stringify(arrayMensajes))
+      console.log(localStorage)
+      // Eliminamos el 'li' del mensaje correspondiente
+      e.target.parentElement.remove()
+    }
+  })
+
 
     // Añadir los listeners para resaltar campo activo
     inputNombre.addEventListener("focus", resaltarCampoActivo)
@@ -58,6 +81,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // Funciones
+
+    // Función para añadir clientes
+    function anadirHTML() {
+        var mensaje = document.querySelector("#mensaje").value.trim();
+        if (mensaje !== "") {
+        arrayMensajes.push(mensaje);
+        var mensajeAnadir = `
+        <li data-indice="${arrayMensajes.length - 1}">${mensaje}<a class="borrar-mensaje" href="#">X</a></li>
+        `
+    
+        var ul = document.createElement("ul")
+        ul.innerHTML = mensajeAnadir
+    
+        mensajesEnPantalla.appendChild(ul)
+    
+        // Se actualiza el localStorage tras añadir el nuevo mensaje
+        localStorage.setItem("Clientes", JSON.stringify(arrayMensajes))
+        console.log(localStorage)
+    
+        //console.log(arrayMensajes)
+    
+        document.querySelector("#mensaje").value = ""
+        } else {
+        alert("Por favor, debes agregar un mensaje antes de añadirlo.");
+        }
+    
+  }
 
     // Resaltamos el campo activo
     function resaltarCampoActivo(e) {
