@@ -1,5 +1,5 @@
 var listadoClientes = []
-var clientesEnPantalla = document.querySelector("#listado-clientes")
+var tablaDeClientes = document.querySelector("#listado-clientes")
 
 // Selectores y Listeners
 
@@ -36,13 +36,13 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 
     // Listener para remover clientes
-    mensajesEnPantalla.addEventListener("click", (e) => {
+    tablaDeClientes.addEventListener("click", (e) => {
     if (e.target.className == "borrar-mensaje") {
       var indiceLi = parseInt(e.target.parentElement.dataset.indice)
       // Eliminamos el mensaje del array
-      arrayMensajes.splice(indiceLi, 1)
+      listadoClientes.splice(indiceLi, 1)
       // Actualizamos el localStorage tras haber eliminado el mensaje
-      localStorage.setItem("Clientes", JSON.stringify(arrayMensajes))
+      localStorage.setItem("Clientes", JSON.stringify(listadoClientes))
       console.log(localStorage)
       // Eliminamos el 'li' del mensaje correspondiente
       e.target.parentElement.remove()
@@ -82,32 +82,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Funciones
 
-    // Función para añadir clientes
+    // Se agrega un nuevo cliente a la tabla de clientes en el HTML
     function anadirHTML() {
-        var mensaje = document.querySelector("#mensaje").value.trim();
-        if (mensaje !== "") {
-        arrayMensajes.push(mensaje);
-        var mensajeAnadir = `
-        <li data-indice="${arrayMensajes.length - 1}">${mensaje}<a class="borrar-mensaje" href="#">X</a></li>
-        `
+        
+        const fila = document.createElement("tr")
     
-        var ul = document.createElement("ul")
-        ul.innerHTML = mensajeAnadir
+        const nombreCliente = document.createElement("td")
+        nombreCliente.textContent = clienteOBJ.nombre
+        fila.appendChild(nombreCliente)
     
-        mensajesEnPantalla.appendChild(ul)
+        /* const emailCliente = document.createElement("td")
+        emailCliente.textContent = clienteOBJ.email
+        fila.appendChild(emailCliente) */
     
-        // Se actualiza el localStorage tras añadir el nuevo mensaje
-        localStorage.setItem("Clientes", JSON.stringify(arrayMensajes))
-        console.log(localStorage)
+        const telefonoCliente = document.createElement("td")
+        telefonoCliente.textContent = clienteOBJ.telefono
+        fila.appendChild(telefonoCliente)
     
-        //console.log(arrayMensajes)
+        const empresaCliente = document.createElement("td")
+        empresaCliente.textContent = clienteOBJ.empresa
+        fila.appendChild(empresaCliente)
     
-        document.querySelector("#mensaje").value = ""
-        } else {
-        alert("Por favor, debes agregar un mensaje antes de añadirlo.");
-        }
+        const acciones = document.createElement("td")
     
-  }
+        const botonEditar = document.createElement("button")
+        botonEditar.textContent = "Editar Cliente"
+        botonEditar.addEventListener("click", () => {
+            // Edición de los datos del cliente
+            console.log("Editar cliente:", clienteOBJ)
+        });
+    
+        const botonBorrar = document.createElement("button")
+        botonBorrar.textContent = "Borrar Cliente"
+        botonBorrar.addEventListener("click", () => {
+            // Borramos el cliente
+            console.log("Borrar cliente:", clienteOBJ)
+        });
+    
+        acciones.appendChild(botonEditar)
+        acciones.appendChild(botonBorrar)
+    
+        fila.appendChild(acciones)
+    
+        tablaDeClientes.appendChild(fila)
+    
+        // Agregamos los datos del cliente a la lista de clientes
+        listadoClientes.push(clienteOBJ)
+    
+        // Restablecemos los valores del objeto cliente por defecto
+        clienteOBJ.nombre = ""
+        clienteOBJ.email = ""
+        clienteOBJ.telefono = ""
+        clienteOBJ.empresa = ""
+
+    }
+
+
 
     // Resaltamos el campo activo
     function resaltarCampoActivo(e) {
