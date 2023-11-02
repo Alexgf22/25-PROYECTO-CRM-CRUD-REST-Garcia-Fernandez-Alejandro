@@ -109,6 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
         const botonEditar = document.createElement("button")
         botonEditar.textContent = "Editar Cliente"
+
         botonEditar.classList.add("bg-teal-600")
         //botonEditar.classList.add("w-full")
         botonEditar.classList.add("mt-5")
@@ -116,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
         botonEditar.classList.add("text-white")
         botonEditar.classList.add("uppercase")
         botonEditar.classList.add("font-bold")
+
         botonEditar.addEventListener("click", () => {
             // Edición de los datos del cliente
             console.log("Editar cliente:", clienteOBJ)
@@ -125,6 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
         const botonBorrar = document.createElement("button")
         botonBorrar.textContent = "Borrar Cliente"
+
         botonBorrar.classList.add("bg-teal-600")
         //botonBorrar.classList.add("w-full")
         botonBorrar.classList.add("mt-5")
@@ -132,9 +135,15 @@ document.addEventListener("DOMContentLoaded", () => {
         botonBorrar.classList.add("text-white")
         botonBorrar.classList.add("uppercase")
         botonBorrar.classList.add("font-bold")
-        botonBorrar.addEventListener("click", () => {
-            // Borramos el cliente
-            console.log("Borrar cliente:", clienteOBJ)
+
+        botonBorrar.addEventListener("click", (e) => {
+            // Se busca la fila donde se haya presionado el botón
+            const fila = e.target.parentElement.parentElement.parentElement
+            const indiceFila = fila.rowIndex - 1
+
+            // Eliminamos el cliente de la lista y del DOM
+            listadoClientes.splice(indiceFila, 1)
+            fila.remove()
         })
 
         contenedorBotones.appendChild(botonEditar)
