@@ -104,23 +104,44 @@ document.addEventListener("DOMContentLoaded", () => {
         fila.appendChild(empresaCliente)
     
         const acciones = document.createElement("td")
+
+        const contenedorBotones = document.createElement("div")
     
         const botonEditar = document.createElement("button")
         botonEditar.textContent = "Editar Cliente"
+        botonEditar.classList.add("bg-teal-600")
+        //botonEditar.classList.add("w-full")
+        botonEditar.classList.add("mt-5")
+        botonEditar.classList.add("p-2")
+        botonEditar.classList.add("text-white")
+        botonEditar.classList.add("uppercase")
+        botonEditar.classList.add("font-bold")
         botonEditar.addEventListener("click", () => {
             // Edición de los datos del cliente
             console.log("Editar cliente:", clienteOBJ)
-        });
+        })
+
+        const espacio = document.createTextNode(" ")
     
         const botonBorrar = document.createElement("button")
         botonBorrar.textContent = "Borrar Cliente"
+        botonBorrar.classList.add("bg-teal-600")
+        //botonBorrar.classList.add("w-full")
+        botonBorrar.classList.add("mt-5")
+        botonBorrar.classList.add("p-2")
+        botonBorrar.classList.add("text-white")
+        botonBorrar.classList.add("uppercase")
+        botonBorrar.classList.add("font-bold")
         botonBorrar.addEventListener("click", () => {
             // Borramos el cliente
             console.log("Borrar cliente:", clienteOBJ)
-        });
+        })
+
+        contenedorBotones.appendChild(botonEditar)
+        contenedorBotones.appendChild(espacio)
+        contenedorBotones.appendChild(botonBorrar)
     
-        acciones.appendChild(botonEditar)
-        acciones.appendChild(botonBorrar)
+        acciones.appendChild(contenedorBotones)
     
         fila.appendChild(acciones)
     
@@ -213,10 +234,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         limpiarAlerta(e.target.parentElement)
 
-        clienteOBJ[e.target.name] = e.target.value.trim().toLowerCase()
+        clienteOBJ[e.target.name] = capitalizarNombreCompleto(e.target.value.trim())
         comprobarFormulario(clienteOBJ)
         //console.log(clienteOBJ)
         
+    }
+
+    function capitalizarNombreCompleto(nombreCompleto) {
+        const palabras = nombreCompleto.split(' ');
+        const nombreCapitalizado = palabras.map(palabra => palabra.charAt(0).toUpperCase() + palabra.slice(1)).join(' ');
+        return nombreCapitalizado;
     }
 
     function comprobarFormulario() {
