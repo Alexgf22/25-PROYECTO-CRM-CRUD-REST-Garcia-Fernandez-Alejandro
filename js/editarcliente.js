@@ -1,0 +1,1 @@
+// En acciones del index de cliente van los botones de eliminar y editar cliente

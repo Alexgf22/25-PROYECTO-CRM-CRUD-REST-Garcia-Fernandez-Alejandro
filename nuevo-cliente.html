@@ -73,18 +73,38 @@
                             </div>
 
 
-                            <input
+                            <button
                                 type="submit"
                                 class="bg-teal-600 hover:bg-teal-900 w-full mt-5 p-2 text-white uppercase font-bold"
-                                value="Agregar Cliente"
-                            />
+                                disabled="true"
+                            >
+                            Agregar Cliente
+                            </button>
+
+                            <br>
+                            <br>
                         </form>
+
+
+                        <div id="spinner" class="hidden flex justify-center mt-10">
+
+                            <div class="sk-chase">
+                                <div class="sk-chase-dot"></div>
+                                <div class="sk-chase-dot"></div>
+                                <div class="sk-chase-dot"></div>
+                                <div class="sk-chase-dot"></div>
+                                <div class="sk-chase-dot"></div>
+                                <div class="sk-chase-dot"></div>
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
             </div>
         </main>
     </div>
     
-    <script src="js/nuevocliente.js" type="module"></script>
+    <script src="js/nuevocliente.js"></script>
 </body>
 </html>
