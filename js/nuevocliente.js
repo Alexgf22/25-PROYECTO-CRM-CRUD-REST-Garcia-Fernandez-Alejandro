@@ -139,6 +139,10 @@ document.addEventListener("DOMContentLoaded", () => {
         botonBorrar.addEventListener("click", (e) => {
             // Se busca la fila donde se haya presionado el botón
             const fila = e.target.parentElement.parentElement.parentElement
+            /* Le restamos 1 al índice para poder buscar en el array
+             ya que en la tabla, el índice comienza en 1 y en el array
+             en 0
+            */
             const indiceFila = fila.rowIndex - 1
 
             // Eliminamos el cliente de la lista y del DOM
