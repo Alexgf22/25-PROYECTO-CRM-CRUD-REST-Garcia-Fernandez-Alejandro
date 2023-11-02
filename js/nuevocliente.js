@@ -22,16 +22,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const spinner = document.querySelector("#spinner")
 
     // Deshabilitar el botón por defecto
-    btnSubmit.disabled = true;
-    btnSubmit.classList.add("opacity-50");
+    btnSubmit.disabled = true
+    btnSubmit.classList.add("opacity-50")
 
     // Listeners
 
+    // Añadir los listeners para resaltar campo activo
+    inputNombre.addEventListener("focus", resaltarCampoActivo)
+    inputCorreo.addEventListener("focus", resaltarCampoActivo)
+    inputTelefono.addEventListener("focus", resaltarCampoActivo)
+    inputEmpresa.addEventListener("focus", resaltarCampoActivo)
+
     // Si en vez de blur uso input me lo valida sobre la marcha
-    inputNombre.addEventListener("blur", validar)
-    inputCorreo.addEventListener("blur", validar)
-    inputTelefono.addEventListener("blur", validar)
-    inputEmpresa.addEventListener("blur", validar)
+    inputNombre.addEventListener("blur", (e) => {
+        quitarResaltadoCampo(e)
+        validar(e)
+    })
+    inputCorreo.addEventListener("blur", (e) => {
+        quitarResaltadoCampo(e)
+        validar(e)
+    })
+    inputTelefono.addEventListener("blur", (e) => {
+        quitarResaltadoCampo(e)
+        validar(e)
+    })
+    inputEmpresa.addEventListener("blur", (e) => {
+        quitarResaltadoCampo(e)
+        validar(e)
+    })
     formulario.addEventListener("submit", activarSpinner)
     /* btnReset.addEventListener("click", (e) => {
         e.preventDefault()
@@ -40,6 +58,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // Funciones
+
+    // Resaltamos el campo activo
+    function resaltarCampoActivo(e) {
+        e.target.style.borderColor = "#3498db"
+        e.target.style.boxShadow = "0 0 10px rgba(52, 152, 219, 0.7)"
+    }
+
+    // Eliminamos el resaltado cuando el campo pierde el foco
+    function quitarResaltadoCampo(e) {
+        e.target.style.borderColor = ""
+        e.target.style.boxShadow = ""
+    }
+    
 
     function activarSpinner(e) {
         e.preventDefault()
@@ -109,18 +140,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function comprobarFormulario() {
-        const values = Object.values(clienteOBJ);
+        const values = Object.values(clienteOBJ)
     
         // Verificar si hay algún campo vacío o no válido
-        const campoVacio = values.includes("");
-        const formularioValido = values.every(value => value !== "");
+        const campoVacio = values.includes("")
+        const formularioValido = values.every(value => value !== "")
     
         if (campoVacio || !formularioValido) {
-            btnSubmit.classList.add("opacity-50");
-            btnSubmit.disabled = true;
+            btnSubmit.classList.add("opacity-50")
+            btnSubmit.disabled = true
         } else {
-            btnSubmit.classList.remove("opacity-50");
-            btnSubmit.disabled = false;
+            btnSubmit.classList.remove("opacity-50")
+            btnSubmit.disabled = false
         }
     }
     
