@@ -1,12 +1,13 @@
 var listadoClientes = []
-var tablaDeClientes = document.querySelector("#listado-clientes")
+let clienteSeleccionado = null;
+let indiceClienteSeleccionado = null;
 
 // Selectores y Listeners
 
 document.addEventListener("DOMContentLoaded", () => {
 
     // Objeto con el contenido del mensaje
-    clienteOBJ = {
+    let clienteOBJ = {
         nombre: "",
         email: "",
         telefono: "",
@@ -21,8 +22,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputEmpresa = document.querySelector("#empresa")
     const formulario = document.querySelector("#formulario")
     const btnSubmit = document.querySelector('#formulario button[type = "submit"]')
+    const btnEditarCliente = document.querySelector("#editarCliente")
     //const btnReset = document.querySelector('#formulario button[type = "reset"]')
     const spinner = document.querySelector("#spinner")
+    var tablaDeClientes = document.querySelector("#listado-clientes")
+
 
     // Deshabilitar el botón por defecto
     btnSubmit.disabled = true
@@ -33,21 +37,23 @@ document.addEventListener("DOMContentLoaded", () => {
     // Listener para el botón de añadir
     btnSubmit.addEventListener("click", () => {
     anadirHTML()
-  })
+    })
 
     // Listener para remover clientes
+    /*
     tablaDeClientes.addEventListener("click", (e) => {
-    if (e.target.className == "borrar-mensaje") {
-      var indiceLi = parseInt(e.target.parentElement.dataset.indice)
-      // Eliminamos el mensaje del array
-      listadoClientes.splice(indiceLi, 1)
-      // Actualizamos el localStorage tras haber eliminado el mensaje
-      localStorage.setItem("Clientes", JSON.stringify(listadoClientes))
-      console.log(localStorage)
-      // Eliminamos el 'li' del mensaje correspondiente
-      e.target.parentElement.remove()
-    }
-  })
+        if (e.target.className == "borrar-mensaje") {
+        var indiceLi = parseInt(e.target.parentElement.dataset.indice)
+        // Eliminamos el mensaje del array
+        listadoClientes.splice(indiceLi, 1)
+        // Actualizamos el localStorage tras haber eliminado el mensaje
+        localStorage.setItem("Clientes", JSON.stringify(listadoClientes))
+        console.log(localStorage)
+        // Eliminamos el 'li' del mensaje correspondiente
+        e.target.parentElement.remove()
+        }
+    })
+    */
 
 
     // Añadir los listeners para resaltar campo activo
@@ -79,11 +85,65 @@ document.addEventListener("DOMContentLoaded", () => {
         resetForm()
     }) */
 
+    btnEditarCliente.addEventListener("click", (e) => {
+        console.log("Botón Editar Cliente presionado")
+        const fila = e.target.parentElement.parentElement.parentElement
+        const indiceFila = fila.rowIndex - 1
+        clienteSeleccionado = listadoClientes[indiceFila]
+    
+        if (clienteSeleccionado !== null && indiceFila !== null) {
+            console.log("Cliente seleccionado:", clienteSeleccionado)
+            console.log("Indice de fila:", indiceFila)
+    
+            editarClienteDesdeTabla(clienteSeleccionado, indiceFila)
+    
+            btnEditarCliente.disabled = true
+            btnEditarCliente.classList.add("opacity-50")
+            resetForm()
+            clienteSeleccionado = null
+            indiceClienteSeleccionado = null
+        } else {
+            console.log("No hay cliente seleccionado para editar")
+        }
+    })
+    
+    
+      
+
 
     // Funciones
 
+    // En la función que añade el evento click al botón de editar de la tabla
+    function editarClienteDesdeTabla(cliente, indice) {
+        // Llenar el formulario de agregar con los datos del cliente seleccionado
+        inputNombre.value = cliente.nombre
+        inputCorreo.value = cliente.email
+        inputTelefono.value = cliente.telefono
+        inputEmpresa.value = cliente.empresa
+    
+        // Habilitar el botón de Editar Cliente en el formulario de agregar
+        btnEditarCliente.disabled = false
+        btnEditarCliente.classList.remove("opacity-50")
+    
+        // Actualizar la variable global de cliente seleccionado e índice
+        clienteSeleccionado = cliente
+        indiceClienteSeleccionado = indice
+    }
+  
+
     // Se agrega un nuevo cliente a la tabla de clientes en el HTML
     function anadirHTML() {
+
+        // Creamos un nuevo objeto cliente para cada cliente que se añade
+        clienteOBJ = {
+            nombre: inputNombre.value,
+            email: inputCorreo.value,
+            telefono: inputTelefono.value,
+            empresa: inputEmpresa.value
+        }
+
+       
+        //console.log(clienteOBJ.nombre)
         
         const fila = document.createElement("tr")
     
@@ -159,9 +219,12 @@ document.addEventListener("DOMContentLoaded", () => {
         fila.appendChild(acciones)
     
         tablaDeClientes.appendChild(fila)
+
+        console.log(clienteOBJ)
     
         // Agregamos los datos del cliente a la lista de clientes
         listadoClientes.push(clienteOBJ)
+        console.log("Listado de clientes:", listadoClientes)
     
         // Restablecemos los valores del objeto cliente por defecto
         clienteOBJ.nombre = ""
