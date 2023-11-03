@@ -1,18 +1,18 @@
 var listadoClientes = []
-let clienteSeleccionado = null;
-let indiceClienteSeleccionado = null;
+
+// Objeto con el contenido del mensaje
+let clienteOBJ = {
+    nombre: "",
+    email: "",
+    telefono: "",
+    empresa: ""
+}
+
 
 // Selectores y Listeners
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Objeto con el contenido del mensaje
-    let clienteOBJ = {
-        nombre: "",
-        email: "",
-        telefono: "",
-        empresa: ""
-    }
 
     
     // Selectores
@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputEmpresa = document.querySelector("#empresa")
     const formulario = document.querySelector("#formulario")
     const btnSubmit = document.querySelector('#formulario button[type = "submit"]')
-    const btnEditarCliente = document.querySelector("#editarCliente")
     //const btnReset = document.querySelector('#formulario button[type = "reset"]')
     const spinner = document.querySelector("#spinner")
     var tablaDeClientes = document.querySelector("#listado-clientes")
@@ -85,50 +84,12 @@ document.addEventListener("DOMContentLoaded", () => {
         resetForm()
     }) */
 
-    btnEditarCliente.addEventListener("click", (e) => {
-        console.log("Botón Editar Cliente presionado")
-        const fila = e.target.parentElement.parentElement.parentElement
-        const indiceFila = fila.rowIndex - 1
-        clienteSeleccionado = listadoClientes[indiceFila]
     
-        if (clienteSeleccionado !== null && indiceFila !== null) {
-            console.log("Cliente seleccionado:", clienteSeleccionado)
-            console.log("Indice de fila:", indiceFila)
-    
-            editarClienteDesdeTabla(clienteSeleccionado, indiceFila)
-    
-            btnEditarCliente.disabled = true
-            btnEditarCliente.classList.add("opacity-50")
-            resetForm()
-            clienteSeleccionado = null
-            indiceClienteSeleccionado = null
-        } else {
-            console.log("No hay cliente seleccionado para editar")
-        }
-    })
-    
-    
-      
 
 
     // Funciones
 
-    // En la función que añade el evento click al botón de editar de la tabla
-    function editarClienteDesdeTabla(cliente, indice) {
-        // Llenar el formulario de agregar con los datos del cliente seleccionado
-        inputNombre.value = cliente.nombre
-        inputCorreo.value = cliente.email
-        inputTelefono.value = cliente.telefono
-        inputEmpresa.value = cliente.empresa
     
-        // Habilitar el botón de Editar Cliente en el formulario de agregar
-        btnEditarCliente.disabled = false
-        btnEditarCliente.classList.remove("opacity-50")
-    
-        // Actualizar la variable global de cliente seleccionado e índice
-        clienteSeleccionado = cliente
-        indiceClienteSeleccionado = indice
-    }
   
 
     // Se agrega un nuevo cliente a la tabla de clientes en el HTML
@@ -179,10 +140,17 @@ document.addEventListener("DOMContentLoaded", () => {
         botonEditar.classList.add("font-bold")
 
         botonEditar.addEventListener("click", () => {
-            // Edición de los datos del cliente
-            console.log("Editar cliente:", clienteOBJ)
+            // Obtener los datos del cliente seleccionado
+            const nombre = clienteOBJ.nombre;
+            const email = clienteOBJ.email;
+            const telefono = clienteOBJ.telefono;
+            const empresa = clienteOBJ.empresa;
+    
+            // Redirigir al usuario a la página de edición con los datos como parámetros de consulta
+            window.location.href = `editar-cliente.html?nombre=${nombre}&email=${email}&telefono=${telefono}&empresa=${empresa}`;
         })
 
+        
         const espacio = document.createTextNode(" ")
     
         const botonBorrar = document.createElement("button")
@@ -223,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(clienteOBJ)
     
         // Agregamos los datos del cliente a la lista de clientes
-        listadoClientes.push(clienteOBJ)
+        listadoClientes = [...listadoClientes, clienteOBJ]
         console.log("Listado de clientes:", listadoClientes)
     
         // Restablecemos los valores del objeto cliente por defecto
