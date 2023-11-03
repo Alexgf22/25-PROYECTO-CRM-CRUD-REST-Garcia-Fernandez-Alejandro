@@ -25,6 +25,15 @@ document.addEventListener("DOMContentLoaded", () => {
     btnSubmit.disabled = true
     btnSubmit.classList.add("opacity-50")
 
+    // Se comprueba si hay datos en localStorage y cargarlos en listadoClientes
+    if (localStorage.getItem('Clientes')) {
+        listadoClientes = JSON.parse(localStorage.getItem('Clientes'))
+        // Se llena la tabla con los clientes almacenados en listadoClientes
+        listadoClientes.forEach(cliente => {
+            anadirHTML(cliente)
+        })
+    }
+
     // Listeners
     btnSubmit.addEventListener("click", () => {
     anadirHTML()
@@ -83,16 +92,23 @@ document.addEventListener("DOMContentLoaded", () => {
         botonEditar.classList.add("uppercase")
         botonEditar.classList.add("font-bold")
 
-        botonEditar.addEventListener("click", () => {
+        botonEditar.addEventListener("click", (e) => {
             // Obtener los datos del cliente seleccionado
-            const nombre = clienteOBJ.nombre;
-            const email = clienteOBJ.email;
-            const telefono = clienteOBJ.telefono;
-            const empresa = clienteOBJ.empresa;
-    
-            // Redirigir al usuario a la página de edición con los datos como parámetros de consulta
-            window.location.href = `editar-cliente.html?nombre=${nombre}&email=${email}&telefono=${telefono}&empresa=${empresa}`;
+            const nombre = clienteOBJ.nombre
+            const email = clienteOBJ.email
+            const telefono = clienteOBJ.telefono
+            const empresa = clienteOBJ.empresa
+        
+            // Almacenar los datos en sessionStorage
+            sessionStorage.setItem('clienteNombre', nombre)
+            sessionStorage.setItem('clienteEmail', email)
+            sessionStorage.setItem('clienteTelefono', telefono)
+            sessionStorage.setItem('clienteEmpresa', empresa)
+        
+            // Redirigir al usuario a la página de edición
+            window.location.href = `editar-cliente.html`
         })
+        
 
         const espacio = document.createTextNode(" ")
     
@@ -129,6 +145,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Agregamos los datos del cliente a la lista de clientes
         listadoClientes.push(copiaClienteOBJ)
+
+        localStorage.setItem("Clientes", JSON.stringify(listadoClientes))
     }
 
     function resaltarCampoActivo(e) {
@@ -172,6 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
         clienteOBJ.empresa = ""
         formulario.reset()
         comprobarFormulario()
+        localStorage.setItem("Clientes", JSON.stringify(listadoClientes))
     }
 
     function validar(e) {

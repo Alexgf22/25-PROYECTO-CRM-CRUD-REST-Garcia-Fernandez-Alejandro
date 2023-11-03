@@ -1,15 +1,18 @@
-// En acciones del index de cliente van los botones de eliminar y editar cliente
-
 document.addEventListener("DOMContentLoaded", () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const nombre = urlParams.get('nombre');
-    const email = urlParams.get('email');
-    const telefono = urlParams.get('telefono');
-    const empresa = urlParams.get('empresa');
+    const inputNombre = document.querySelector("#nombre")
+    const inputCorreo = document.querySelector("#email")
+    const inputTelefono = document.querySelector("#telefono")
+    const inputEmpresa = document.querySelector("#empresa")
 
-    // Llenar el formulario de edición con los datos del cliente
-    document.querySelector("#nombre").value = nombre;
-    document.querySelector("#email").value = email;
-    document.querySelector("#telefono").value = telefono;
-    document.querySelector("#empresa").value = empresa;
-});
+    // Recuperar datos de sessionStorage
+    const nombre = sessionStorage.getItem('clienteNombre')
+    const email = sessionStorage.getItem('clienteEmail')
+    const telefono = sessionStorage.getItem('clienteTelefono')
+    const empresa = sessionStorage.getItem('clienteEmpresa')
+
+    // Preenlazar el formulario con los datos del cliente
+    inputNombre.value = nombre
+    inputCorreo.value = email
+    inputTelefono.value = telefono
+    inputEmpresa.value = empresa
+})
