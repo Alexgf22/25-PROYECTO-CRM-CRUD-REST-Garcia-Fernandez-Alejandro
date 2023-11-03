@@ -193,6 +193,18 @@ document.addEventListener("DOMContentLoaded", () => {
             comprobarFormulario() 
             return 
         }
+        if (e.target.id === "nombre" && !validarNombre(e.target.value)) {
+            mostrarAlerta("El nombre no es válido", e.target.parentElement)
+            clienteOBJ[e.target.name] = ""
+            comprobarFormulario() 
+            return 
+        }
+        if (e.target.id === "empresa" && !validarEmpresa(e.target.value)) {
+            mostrarAlerta("La empresa cliente no es válida", e.target.parentElement)
+            clienteOBJ[e.target.name] = ""
+            comprobarFormulario() 
+            return 
+        }
 
         limpiarAlerta(e.target.parentElement)
 
@@ -247,6 +259,30 @@ document.addEventListener("DOMContentLoaded", () => {
         regex = /^[0-9]{9}$/
         resultado = regex.test(telefono)
         return resultado
+    }
+
+    function validarNombre(nombre) {
+        const regex = /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s']+$/
+        const longitudMinima = 2
+        const longitudMaxima = 50
+    
+        if (nombre.length < longitudMinima || nombre.length > longitudMaxima) {
+            return false
+        }
+    
+        return regex.test(nombre)
+    }
+
+    function validarEmpresa(empresa) {
+        const regex = /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s']+$/
+        const longitudMinima = 2
+        const longitudMaxima = 120
+    
+        if (nombre.length < longitudMinima || nombre.length > longitudMaxima) {
+            return false
+        }
+    
+        return regex.test(empresa)
     }
 
 })
