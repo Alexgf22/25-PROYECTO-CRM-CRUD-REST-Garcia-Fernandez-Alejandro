@@ -11,9 +11,9 @@ function actualizarFilaEnTabla(clienteID, nuevoNombre, nuevoTelefono, nuevaEmpre
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    /* if (!localStorage.getItem('Clientes')) {
+    if (!localStorage.getItem('Clientes')) {
         sessionStorage.clear()
-    } */
+    } 
 
     const btnGuardarCambios = document.querySelector('#formulario button[type="submit"]')
 
@@ -23,20 +23,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const empresaInput = document.querySelector("#empresa")
 
     // Prellenar el formulario con los datos del cliente
-    const clienteID = sessionStorage.getItem("clienteID")
-    const cliente = listadoClientes.find(cliente => cliente.id === clienteID)
+    const nombre = sessionStorage.getItem('clienteNombre')
+    const email = sessionStorage.getItem('clienteEmail')
+    const telefono = sessionStorage.getItem('clienteTelefono')
+    const empresa = sessionStorage.getItem('clienteEmpresa')
 
-    if (cliente) {
-        nombreInput.value = cliente.nombre
-        emailInput.value = cliente.email
-        telefonoInput.value = cliente.telefono
-        empresaInput.value = cliente.empresa
+    if (nombre !== null && email !== null && telefono !== null && empresa !== null) {
+        nombreInput.value = nombre
+        emailInput.value = email
+        telefonoInput.value = telefono
+        empresaInput.value = empresa
+
+        nombreInput.addEventListener("input", validarFormulario)
+        emailInput.addEventListener("input", validarFormulario)
+        telefonoInput.addEventListener("input", validarFormulario)
+        empresaInput.addEventListener("input", validarFormulario)
     }
-
-    nombreInput.addEventListener("input", validarFormulario)
-    emailInput.addEventListener("input", validarFormulario)
-    telefonoInput.addEventListener("input", validarFormulario)
-    empresaInput.addEventListener("input", validarFormulario)
 
     // Funciones
     function validarFormulario() {
@@ -87,6 +89,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         localStorage.setItem('Clientes', JSON.stringify(listadoClientes))
+
+        window.location.replace('index.html')
 
     })
 
