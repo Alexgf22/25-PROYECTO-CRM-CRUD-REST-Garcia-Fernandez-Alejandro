@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (localStorage.getItem('Clientes')) {
         listadoClientes = JSON.parse(localStorage.getItem('Clientes'))
         listadoClientes.forEach(cliente => {
-            anadirHTML(cliente)
+            regresarClienteAlHtml(cliente)
         })
     }
 
@@ -108,7 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.location.href = `editar-cliente.html`
             })
             
-
             const espacio = document.createTextNode(" ")
         
             const botonBorrar = document.createElement("button")
@@ -148,10 +147,92 @@ document.addEventListener("DOMContentLoaded", () => {
             clienteOBJ.nombre = ""
             clienteOBJ.email = ""
             clienteOBJ.telefono = ""
-            clienteOBJ.empresa = ""
+            clienteOBJ.empresa = "" 
+            formulario.reset()
+            comprobarFormulario()
 
             localStorage.setItem("Clientes", JSON.stringify(listadoClientes))
+            console.log(listadoClientes)
         }
+    }
+    
+    function regresarClienteAlHtml(cliente) {
+        const fila = document.createElement("tr")
+        
+        const nombreCliente = document.createElement("td")
+        nombreCliente.textContent = cliente.nombre
+        fila.appendChild(nombreCliente)
+    
+        const telefonoCliente = document.createElement("td")
+        telefonoCliente.textContent = cliente.telefono
+        fila.appendChild(telefonoCliente)
+    
+        const empresaCliente = document.createElement("td")
+        empresaCliente.textContent = cliente.empresa
+        fila.appendChild(empresaCliente)
+
+        const acciones = document.createElement("td")
+
+        const contenedorBotones = document.createElement("div")
+    
+        const botonEditar = document.createElement("button")
+        botonEditar.textContent = "Editar Cliente"
+
+        botonEditar.classList.add("bg-teal-600")
+        botonEditar.classList.add("mt-5")
+        botonEditar.classList.add("p-2")
+        botonEditar.classList.add("text-white")
+        botonEditar.classList.add("uppercase")
+        botonEditar.classList.add("font-bold")
+
+        botonEditar.addEventListener("click", (e) => {
+            // Obtener los datos del cliente seleccionado
+            const nombre = cliente.nombre
+            const email = cliente.email
+            const telefono = cliente.telefono
+            const empresa = cliente.empresa
+        
+            // Almacenar los datos en sessionStorage
+            sessionStorage.setItem('clienteNombre', nombre)
+            sessionStorage.setItem('clienteEmail', email)
+            sessionStorage.setItem('clienteTelefono', telefono)
+            sessionStorage.setItem('clienteEmpresa', empresa)
+        
+            // Redirigir al usuario a la página de edición
+            window.location.href = `editar-cliente.html`
+        })
+        
+        const espacio = document.createTextNode(" ")
+    
+        const botonBorrar = document.createElement("button")
+        botonBorrar.textContent = "Borrar Cliente"
+
+        botonBorrar.classList.add("bg-teal-600")
+        botonBorrar.classList.add("mt-5")
+        botonBorrar.classList.add("p-2")
+        botonBorrar.classList.add("text-white")
+        botonBorrar.classList.add("uppercase")
+        botonBorrar.classList.add("font-bold")
+
+        botonBorrar.addEventListener("click", (e) => {
+            const fila = e.target.parentElement.parentElement.parentElement
+            const indiceFila = fila.rowIndex - 1
+
+            // Eliminamos el cliente de la lista y del DOM
+            listadoClientes.splice(indiceFila, 1)
+            fila.remove()
+            localStorage.setItem("Clientes", JSON.stringify(listadoClientes))
+        }) 
+
+        contenedorBotones.appendChild(botonEditar)
+        contenedorBotones.appendChild(espacio)
+        contenedorBotones.appendChild(botonBorrar)
+    
+        acciones.appendChild(contenedorBotones)
+    
+        fila.appendChild(acciones)
+    
+        tablaDeClientes.appendChild(fila)
     }
 
     function resaltarCampoActivo(e) {
@@ -195,7 +276,6 @@ document.addEventListener("DOMContentLoaded", () => {
         clienteOBJ.empresa = "" 
         formulario.reset()
         comprobarFormulario()
-        localStorage.setItem("Clientes", JSON.stringify(listadoClientes))
     }
 
     function validar(e) {
