@@ -317,9 +317,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function capitalizarNombreCompleto(nombreCompleto) {
-        const palabras = nombreCompleto.split(' ');
-        const nombreCapitalizado = palabras.map(palabra => palabra.charAt(0).toUpperCase() + palabra.slice(1)).join(' ');
-        return nombreCapitalizado;
+        const palabras = nombreCompleto.split(' ')
+        const nombreCapitalizado = palabras.map(palabra => palabra.charAt(0).toUpperCase() + palabra.slice(1)).join(' ')
+        return nombreCapitalizado
     }
 
     function comprobarFormulario() {
