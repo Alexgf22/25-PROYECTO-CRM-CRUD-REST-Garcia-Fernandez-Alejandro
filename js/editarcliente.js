@@ -1,3 +1,5 @@
+var listadoClientes = JSON.parse(localStorage.getItem('Clientes'))
+
 function actualizarFilaEnTabla(clienteID, nuevoNombre, nuevoTelefono, nuevaEmpresa) {
     const fila = document.querySelector(`tr[data-id="${clienteID}"]`)
     if (fila) {
@@ -12,6 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!localStorage.getItem('Clientes')) {
         sessionStorage.clear();
     }
+
+    const btnGuardarCambios = document.querySelector('form#formulario button[type="submit"]')
+
     const nombre = sessionStorage.getItem('clienteNombre')
     const email = sessionStorage.getItem('clienteEmail')
     const telefono = sessionStorage.getItem('clienteTelefono')
@@ -23,11 +28,57 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector("#email").value = email
         document.querySelector("#telefono").value = telefono
         document.querySelector("#empresa").value = empresa
+
+        document.querySelector("#nombre").addEventListener("input", validarFormulario)
+        document.querySelector("#email").addEventListener("input", validarFormulario)
+        document.querySelector("#telefono").addEventListener("input", validarFormulario)
+        document.querySelector("#empresa").addEventListener("input", validarFormulario)
     }
 
-    const btnGuardarCambios = document.querySelector('form#formulario button[type="submit"]')
+    function validarFormulario() {
+        const nuevoNombre = document.querySelector("#nombre").value;
+        const nuevoEmail = document.querySelector("#email").value;
+        const nuevoTelefono = document.querySelector("#telefono").value;
+        const nuevaEmpresa = document.querySelector("#empresa").value;
 
-    btnGuardarCambios.addEventListener("click", () => {
+        const nombreEsValido = validarNombre(nuevoNombre);
+        const emailEsValido = validarEmail(nuevoEmail);
+        const telefonoEsValido = validarTelefono(nuevoTelefono);
+        const empresaEsValida = validarEmpresa(nuevaEmpresa);
+
+        const formularioEsValido = nombreEsValido && emailEsValido && telefonoEsValido && empresaEsValida;
+
+        if (formularioEsValido) {
+            btnGuardarCambios.disabled = false;
+
+            const clienteID = sessionStorage.getItem("clienteID")
+
+            actualizarFilaEnTabla(clienteID, nuevoNombre, nuevoTelefono, nuevaEmpresa)
+
+            const clienteIndex = listadoClientes.findIndex(cliente => cliente.id === clienteID)
+
+            if (clienteIndex !== -1) {
+                listadoClientes[clienteIndex] = {
+                    id: clienteID,
+                    nombre: nuevoNombre,
+                    email: nuevoEmail,
+                    telefono: nuevoTelefono,
+                    empresa: nuevaEmpresa
+                }
+            } 
+
+            localStorage.setItem('Clientes', JSON.stringify(listadoClientes))
+
+            window.location.replace('index.html')
+        } else {
+            btnGuardarCambios.disabled = true;
+        }
+    }
+
+
+
+
+    /* btnGuardarCambios.addEventListener("click", () => {
         // Obtener los nuevos datos del formulario
         const nuevoNombre = document.querySelector("#nombre").value
         const nuevoEmail = document.querySelector("#email").value
@@ -92,6 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         localStorage.setItem('Clientes', JSON.stringify(listadoClientes))
 
-        window.location.replace = ('index.html')
-    })
+        window.location.replace('index.html')
+    }) */
 })
