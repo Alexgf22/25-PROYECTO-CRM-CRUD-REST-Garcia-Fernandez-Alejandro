@@ -1,0 +1,596 @@
+var listadoClientes = []
+
+// Objeto con los datos del cliente
+let clienteOBJ = {
+    nombre: "",
+    email: "",
+    telefono: "",
+    empresa: ""
+}
+
+function actualizarFilaEnTabla(clienteID, nuevoNombre, nuevoTelefono, nuevaEmpresa) {
+    const fila = document.querySelector(`tr[data-id="${clienteID}"]`)
+    if (fila) {
+        fila.querySelector("td:nth-child(1)").textContent = nuevoNombre
+        fila.querySelector("td:nth-child(2)").textContent = nuevoTelefono
+        fila.querySelector("td:nth-child(3)").textContent = nuevaEmpresa
+    }
+}
+
+// Selectores y Listeners
+document.addEventListener("DOMContentLoaded", () => {
+
+    // Selectores
+    const inputNombre = document.querySelector("#nombre")
+    const inputCorreo = document.querySelector("#email")
+    const inputTelefono = document.querySelector("#telefono")
+    const inputEmpresa = document.querySelector("#empresa")
+    const formulario = document.querySelector("#formulario")
+    const btnSubmit = document.querySelector(".agregar-cliente")
+    const spinner = document.querySelector("#spinner")
+    let tablaDeClientes = document.querySelector("#listado-clientes")
+
+    if (window.location.pathname.includes('editar-cliente.html')) {
+        const btnGuardarCambios = document.querySelector(".guardar-cambios")
+
+        if (!localStorage.getItem('Clientes')) {
+            sessionStorage.clear();
+        }
+
+        const nombre = sessionStorage.getItem('clienteNombre')
+        const email = sessionStorage.getItem('clienteEmail')
+        const telefono = sessionStorage.getItem('clienteTelefono')
+        const empresa = sessionStorage.getItem('clienteEmpresa')
+
+        if (nombre !== null && email !== null && telefono !== null && empresa !== null) {
+            document.querySelector("#nombre").value = nombre
+            document.querySelector("#email").value = email
+            document.querySelector("#telefono").value = telefono
+            document.querySelector("#empresa").value = empresa
+        }
+
+        btnGuardarCambios.addEventListener("click", (e) => {
+            e.preventDefault()
+    
+            if (validarCampos()) {
+    
+                // Obtener los nuevos datos del formulario
+                const nuevoNombre = document.querySelector("#nombre").value
+                const nuevoEmail = document.querySelector("#email").value
+                const nuevoTelefono = document.querySelector("#telefono").value
+                const nuevaEmpresa = document.querySelector("#empresa").value
+    
+                // Obtener el ID del cliente
+                const clienteID = sessionStorage.getItem("clienteID")
+    
+                console.log(nuevoNombre, nuevoEmail, nuevoTelefono, nuevaEmpresa)
+                
+                if (!validarNombre(nuevoNombre) || !validarTelefono(nuevoTelefono) || !validarEmpresa(nuevaEmpresa) || !validarEmail(nuevoEmail)) {
+                    // Si alguna validación falla, no se procede
+                    return
+                }
+    
+                console.log(clienteID)
+    
+                actualizarFilaEnTabla(clienteID, nuevoNombre, nuevoTelefono, nuevaEmpresa)
+    
+                const clienteIndex = listadoClientes.findIndex(cliente => cliente.id === clienteID)
+    
+                if (clienteIndex !== -1) {
+                    listadoClientes[clienteIndex] = {
+                        id: clienteID,
+                        nombre: nuevoNombre,
+                        email: nuevoEmail,
+                        telefono: nuevoTelefono,
+                        empresa: nuevaEmpresa
+                    }
+                }
+    
+                localStorage.setItem('Clientes', JSON.stringify(listadoClientes))
+    
+                window.location.replace('index.html')
+            }
+        })
+
+        // Funciones
+        function validarCampos() {
+            const nuevoNombre = document.querySelector("#nombre").value
+            const nuevoEmail = document.querySelector("#email").value
+            const nuevoTelefono = document.querySelector("#telefono").value
+            const nuevaEmpresa = document.querySelector("#empresa").value
+    
+            if (!nuevoNombre) {
+                mostrarAlerta("El campo Nombre es obligatorio", document.querySelector("#nombre").parentElement)
+                return false
+            }
+            if (!nuevoEmail) {
+                mostrarAlerta("El campo Email es obligatorio", document.querySelector("#email").parentElement)
+                return false
+            }
+            if (!nuevoTelefono) {
+                mostrarAlerta("El campo Teléfono es obligatorio", document.querySelector("#telefono").parentElement)
+                return false
+            }
+            if (!nuevaEmpresa) {
+                mostrarAlerta("El campo Empresa es obligatorio", document.querySelector("#empresa").parentElement)
+                return false
+            }
+    
+            limpiarAlerta(document.querySelector("#nombre").parentElement)
+            limpiarAlerta(document.querySelector("#email").parentElement)
+            limpiarAlerta(document.querySelector("#telefono").parentElement)
+            limpiarAlerta(document.querySelector("#empresa").parentElement)
+    
+            return true
+        }
+
+        function validarEmail(email) {
+            regex = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/
+            resultado = regex.test(email)
+            return resultado
+        }
+        
+        function validarTelefono(telefono) {
+            regex = /^[0-9]{9}$/
+            resultado = regex.test(telefono)
+            return resultado
+        }
+        
+        function validarNombre(nombre) {
+            const regex = /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s']+$/
+            const longitudMinima = 2
+            const longitudMaxima = 50
+        
+            if (nombre.length < longitudMinima || nombre.length > longitudMaxima) {
+                return false
+            }
+        
+            return regex.test(nombre)
+        }
+        
+        function validarEmpresa(empresa) {
+            const regex = /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s']+$/
+            const longitudMinima = 2
+            const longitudMaxima = 120
+        
+            if (empresa.length < longitudMinima || empresa.length > longitudMaxima) {
+                return false
+            }
+        
+            return regex.test(empresa)
+        }
+    
+    }
+
+    else if (window.location.pathname.includes('index.html')) {
+
+        if (btnSubmit) {
+            btnSubmit.disabled = true
+            btnSubmit.classList.add("opacity-50")
+    
+            btnSubmit.addEventListener("click", () => {
+                anadirHTML()
+            })
+        }
+
+        if (localStorage.getItem('Clientes')) {
+            listadoClientes = JSON.parse(localStorage.getItem('Clientes'))
+            listadoClientes.forEach(cliente => {
+                regresarClienteAlHtml(cliente)
+            })
+        }
+    
+        // Listeners
+        inputNombre.addEventListener("focus", resaltarCampoActivo)
+        inputCorreo.addEventListener("focus", resaltarCampoActivo)
+        inputTelefono.addEventListener("focus", resaltarCampoActivo)
+        inputEmpresa.addEventListener("focus", resaltarCampoActivo)
+    
+        inputNombre.addEventListener("blur", (e) => {
+            quitarResaltadoCampo(e)
+            validar(e)
+        })
+        inputCorreo.addEventListener("blur", (e) => {
+            quitarResaltadoCampo(e)
+            validar(e)
+        })
+        inputTelefono.addEventListener("blur", (e) => {
+            quitarResaltadoCampo(e)
+            validar(e)
+        })
+        inputEmpresa.addEventListener("blur", (e) => {
+            quitarResaltadoCampo(e)
+            validar(e)
+        })
+        formulario.addEventListener("submit", activarSpinner)
+    
+        // Funciones
+        function anadirHTML() {
+    
+            if (clienteOBJ.nombre !== "" && clienteOBJ.email !== "" && clienteOBJ.telefono !== "" && clienteOBJ.empresa !== "") {
+                const fila = document.createElement("tr")
+            
+                const nombreCliente = document.createElement("td")
+                nombreCliente.textContent = clienteOBJ.nombre
+                fila.appendChild(nombreCliente)
+            
+                const telefonoCliente = document.createElement("td")
+                telefonoCliente.textContent = clienteOBJ.telefono
+                fila.appendChild(telefonoCliente)
+            
+                const empresaCliente = document.createElement("td")
+                empresaCliente.textContent = clienteOBJ.empresa
+                fila.appendChild(empresaCliente)
+    
+                const acciones = document.createElement("td")
+    
+                const contenedorBotones = document.createElement("div")
+            
+                const botonEditar = document.createElement("button")
+                botonEditar.textContent = "Editar Cliente"
+    
+                botonEditar.classList.add("bg-teal-600")
+                botonEditar.classList.add("mt-5")
+                botonEditar.classList.add("p-2")
+                botonEditar.classList.add("text-white")
+                botonEditar.classList.add("uppercase")
+                botonEditar.classList.add("font-bold")
+    
+                botonEditar.addEventListener("click", (e) => {
+                    // Obtener los datos del cliente seleccionado
+                    const nombre = clienteOBJ.nombre
+                    const email = clienteOBJ.email
+                    const telefono = clienteOBJ.telefono
+                    const empresa = clienteOBJ.empresa
+                
+                    // Almacenar los datos en sessionStorage
+                    sessionStorage.setItem('clienteNombre', nombre)
+                    sessionStorage.setItem('clienteEmail', email)
+                    sessionStorage.setItem('clienteTelefono', telefono)
+                    sessionStorage.setItem('clienteEmpresa', empresa)
+                
+                    // Redirigir al usuario a la página de edición
+                    window.location.href = `editar-cliente.html`
+                })
+                
+                const espacio = document.createTextNode(" ")
+            
+                const botonBorrar = document.createElement("button")
+                botonBorrar.textContent = "Borrar Cliente"
+    
+                botonBorrar.classList.add("bg-teal-600")
+                botonBorrar.classList.add("mt-5")
+                botonBorrar.classList.add("p-2")
+                botonBorrar.classList.add("text-white")
+                botonBorrar.classList.add("uppercase")
+                botonBorrar.classList.add("font-bold")
+    
+                botonBorrar.addEventListener("click", (e) => {
+                    const fila = e.target.parentElement.parentElement.parentElement
+                    const indiceFila = fila.rowIndex - 1
+    
+                    // Eliminamos el cliente de la lista y del DOM
+                    listadoClientes.splice(indiceFila, 1)
+                    fila.remove()
+                    localStorage.setItem("Clientes", JSON.stringify(listadoClientes))
+                }) 
+    
+                contenedorBotones.appendChild(botonEditar)
+                contenedorBotones.appendChild(espacio)
+                contenedorBotones.appendChild(botonBorrar)
+            
+                acciones.appendChild(contenedorBotones)
+            
+                fila.appendChild(acciones)
+            
+                tablaDeClientes.appendChild(fila)
+    
+                let copiaClienteOBJ = { ...clienteOBJ }
+    
+                listadoClientes.push(copiaClienteOBJ)
+    
+                clienteOBJ.nombre = ""
+                clienteOBJ.email = ""
+                clienteOBJ.telefono = ""
+                clienteOBJ.empresa = "" 
+                formulario.reset()
+                comprobarFormulario()
+    
+                localStorage.setItem("Clientes", JSON.stringify(listadoClientes))
+                console.log(listadoClientes)
+            }
+        }
+        
+        function regresarClienteAlHtml(cliente) {
+            const fila = document.createElement("tr")
+            
+            const nombreCliente = document.createElement("td")
+            nombreCliente.textContent = cliente.nombre
+            fila.appendChild(nombreCliente)
+        
+            const telefonoCliente = document.createElement("td")
+            telefonoCliente.textContent = cliente.telefono
+            fila.appendChild(telefonoCliente)
+        
+            const empresaCliente = document.createElement("td")
+            empresaCliente.textContent = cliente.empresa
+            fila.appendChild(empresaCliente)
+    
+            const acciones = document.createElement("td")
+    
+            const contenedorBotones = document.createElement("div")
+        
+            const botonEditar = document.createElement("button")
+            botonEditar.textContent = "Editar Cliente"
+    
+            botonEditar.classList.add("bg-teal-600")
+            botonEditar.classList.add("mt-5")
+            botonEditar.classList.add("p-2")
+            botonEditar.classList.add("text-white")
+            botonEditar.classList.add("uppercase")
+            botonEditar.classList.add("font-bold")
+    
+            botonEditar.addEventListener("click", (e) => {
+                // Obtener los datos del cliente seleccionado
+                const nombre = cliente.nombre
+                const email = cliente.email
+                const telefono = cliente.telefono
+                const empresa = cliente.empresa
+            
+                // Almacenar los datos en sessionStorage
+                sessionStorage.setItem('clienteNombre', nombre)
+                sessionStorage.setItem('clienteEmail', email)
+                sessionStorage.setItem('clienteTelefono', telefono)
+                sessionStorage.setItem('clienteEmpresa', empresa)
+            
+                // Redirigir al usuario a la página de edición
+                window.location.href = `editar-cliente.html`
+            })
+            
+            const espacio = document.createTextNode(" ")
+        
+            const botonBorrar = document.createElement("button")
+            botonBorrar.textContent = "Borrar Cliente"
+    
+            botonBorrar.classList.add("bg-teal-600")
+            botonBorrar.classList.add("mt-5")
+            botonBorrar.classList.add("p-2")
+            botonBorrar.classList.add("text-white")
+            botonBorrar.classList.add("uppercase")
+            botonBorrar.classList.add("font-bold")
+    
+            botonBorrar.addEventListener("click", (e) => {
+                const fila = e.target.parentElement.parentElement.parentElement
+                const indiceFila = fila.rowIndex - 1
+    
+                // Eliminamos el cliente de la lista y del DOM
+                listadoClientes.splice(indiceFila, 1)
+                fila.remove()
+                localStorage.setItem("Clientes", JSON.stringify(listadoClientes))
+            }) 
+    
+            contenedorBotones.appendChild(botonEditar)
+            contenedorBotones.appendChild(espacio)
+            contenedorBotones.appendChild(botonBorrar)
+        
+            acciones.appendChild(contenedorBotones)
+        
+            fila.appendChild(acciones)
+        
+            tablaDeClientes.appendChild(fila)
+        }
+    
+        function resaltarCampoActivo(e) {
+            e.target.style.borderColor = "#3498db"
+            e.target.style.boxShadow = "0 0 10px rgba(52, 152, 219, 0.7)"
+        }
+    
+        function quitarResaltadoCampo(e) {
+            e.target.style.borderColor = ""
+            e.target.style.boxShadow = ""
+        }
+    
+        function activarSpinner(e) {
+            e.preventDefault()
+            spinner.classList.remove("hidden")
+            spinner.classList.add("flex")
+            
+            setTimeout(() => {
+                spinner.classList.add("hidden")
+                spinner.classList.remove("flex")
+                resetForm()
+    
+                const alerta = document.createElement("p")
+                alerta.classList.add("bg-green-500", "text-white", "text-center",
+                "rounded-lg", "mt-10", "text-sm")
+                alerta.textContent = "El mensaje se ha mandado con éxito"
+                formulario.appendChild(alerta)
+    
+                setTimeout(() => {
+                    alerta.remove()
+                }, 3000)
+    
+            }, 3000)
+    
+        }
+    
+        function resetForm() {
+            clienteOBJ.nombre = ""
+            clienteOBJ.email = ""
+            clienteOBJ.telefono = ""
+            clienteOBJ.empresa = "" 
+            formulario.reset()
+            comprobarFormulario()
+        }
+    
+        function validar(e) {
+            if(e.target.value.trim() === "") {
+                mostrarAlerta(`el campo ${e.target.id} es obligatorio`, e.target.parentElement)
+                clienteOBJ[e.target.name] = ""
+                comprobarFormulario()
+                return 
+            }
+            if (e.target.id === "email" && !validarEmail(e.target.value)) {
+                mostrarAlerta("El email no es válido", e.target.parentElement)
+                clienteOBJ[e.target.name] = ""
+                comprobarFormulario() 
+                return 
+            }
+            if (e.target.id === "telefono" && !validarTelefono(e.target.value)) {
+                mostrarAlerta("El teléfono no es válido", e.target.parentElement)
+                clienteOBJ[e.target.name] = ""
+                comprobarFormulario() 
+                return 
+            }
+            if (e.target.id === "nombre" && !validarNombre(e.target.value)) {
+                mostrarAlerta("El nombre no es válido", e.target.parentElement)
+                clienteOBJ[e.target.name] = ""
+                comprobarFormulario() 
+                return 
+            }
+            if (e.target.id === "empresa" && !validarEmpresa(e.target.value)) {
+                mostrarAlerta("La empresa cliente no es válida", e.target.parentElement)
+                clienteOBJ[e.target.name] = ""
+                comprobarFormulario() 
+                return 
+            }
+    
+            limpiarAlerta(e.target.parentElement)
+    
+            clienteOBJ[e.target.name] = capitalizarNombreCompleto(e.target.value.trim())
+            comprobarFormulario(clienteOBJ)        
+        }
+    
+        function capitalizarNombreCompleto(nombreCompleto) {
+            const palabras = nombreCompleto.split(' ');
+            const nombreCapitalizado = palabras.map(palabra => palabra.charAt(0).toUpperCase() + palabra.slice(1)).join(' ');
+            return nombreCapitalizado;
+        }
+    
+        function comprobarFormulario() {
+            const values = Object.values(clienteOBJ)
+        
+            const campoVacio = values.includes("")
+            const formularioValido = values.every(value => value !== "")
+        
+            if (campoVacio || !formularioValido) {
+                btnSubmit.classList.add("opacity-50")
+                btnSubmit.disabled = true
+            } else {
+                btnSubmit.classList.remove("opacity-50")
+                btnSubmit.disabled = false
+            }
+        }
+        
+        function limpiarAlerta(referencia) {
+            const alerta = referencia.querySelector(".bg-red-600")
+            if (alerta) {
+                alerta.remove()
+            }
+        }
+    
+        function mostrarAlerta(mensaje, referencia) {
+    
+            limpiarAlerta(referencia)
+            const error = document.createElement("p")
+            error.textContent = mensaje
+            error.classList.add("bg-red-600", "text-center", "text-white", "p-2")
+            referencia.appendChild(error)
+        }
+    
+        function validarEmail(email) {
+            regex = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/
+            resultado = regex.test(email)
+            return resultado
+        }
+    
+        function validarTelefono(telefono) {
+            regex = /^[0-9]{9}$/
+            resultado = regex.test(telefono)
+            return resultado
+        }
+    
+        function validarNombre(nombre) {
+            const regex = /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s']+$/
+            const longitudMinima = 2
+            const longitudMaxima = 50
+        
+            if (nombre.length < longitudMinima || nombre.length > longitudMaxima) {
+                return false
+            }
+        
+            return regex.test(nombre)
+        }
+    
+        function validarEmpresa(empresa) {
+            const regex = /^[A-Za-zÁÉÍÓÚáéíóúÜüÑñ\s']+$/
+            const longitudMinima = 2
+            const longitudMaxima = 120
+        
+            if (nombre.length < longitudMinima || nombre.length > longitudMaxima) {
+                return false
+            }
+        
+            return regex.test(empresa)
+        }
+
+    }
+
+    // Funciones
+    function mostrarAlerta(mensaje, referencia) {
+        limpiarAlerta(referencia);
+        const error = document.createElement("p");
+        error.textContent = mensaje;
+        error.classList.add("bg-red-600", "text-center", "text-white", "p-2");
+        referencia.appendChild(error);
+    }
+    
+    function limpiarAlerta(referencia) {
+        const alerta = referencia.querySelector(".bg-red-600");
+        if (alerta) {
+            alerta.remove();
+        }
+    }
+    
+    function validar(e) {
+        if (e.target.value.trim() === "") {
+            mostrarAlerta(`El campo ${e.target.id} es obligatorio`, e.target.parentElement);
+            clienteOBJ[e.target.name] = "";
+            comprobarFormulario();
+            return;
+        }
+        if (e.target.id === "email" && !validarEmail(e.target.value)) {
+            mostrarAlerta("El email no es válido", e.target.parentElement);
+            clienteOBJ[e.target.name] = "";
+            comprobarFormulario();
+            return;
+        }
+        if (e.target.id === "telefono" && !validarTelefono(e.target.value)) {
+            mostrarAlerta("El teléfono no es válido", e.target.parentElement);
+            clienteOBJ[e.target.name] = "";
+            comprobarFormulario();
+            return;
+        }
+        if (e.target.id === "nombre" && !validarNombre(e.target.value)) {
+            mostrarAlerta("El nombre no es válido", e.target.parentElement);
+            clienteOBJ[e.target.name] = "";
+            comprobarFormulario();
+            return;
+        }
+        if (e.target.id === "empresa" && !validarEmpresa(e.target.value)) {
+            mostrarAlerta("La empresa cliente no es válida", e.target.parentElement);
+            clienteOBJ[e.target.name] = "";
+            comprobarFormulario();
+            return;
+        }
+    
+        limpiarAlerta(e.target.parentElement);
+    
+        clienteOBJ[e.target.name] = capitalizarNombreCompleto(e.target.value.trim());
+        comprobarFormulario(clienteOBJ);
+    }
+    
+
+
+
+})
