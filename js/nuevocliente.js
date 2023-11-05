@@ -144,6 +144,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             listadoClientes.push(copiaClienteOBJ)
 
+            //añadirCliente(copiaClienteOBJ)
+
             clienteOBJ.nombre = ""
             clienteOBJ.email = ""
             clienteOBJ.telefono = ""
