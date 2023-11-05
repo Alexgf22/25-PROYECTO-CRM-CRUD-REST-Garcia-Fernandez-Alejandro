@@ -2,7 +2,7 @@
 
 ## Cheatsheet en formato markdown
 
-[Documentación sobre IndexedDb y expresiones regulares](https://alexgf22.github.io/25-PROYECTO-CRM-CRUD-REST-Garcia-Fernandez-Alejandro/Cheatsheet.md)
+[Documentación sobre IndexedDb y expresiones regulares](https://alexgf22.github.io/25-PROYECTO-CRM-CRUD-REST-Garcia-Fernandez-Alejandro/Cheatsheet.html)
 
 ## Código de la aplicación
 
