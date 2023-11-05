@@ -1,13 +1,5 @@
-import { modificarCliente } from './basededatos.js'
-
-function actualizarFilaEnTabla(clienteID, nuevoNombre, nuevoTelefono, nuevaEmpresa) {
-    const fila = document.querySelector(`tr[data-id="${clienteID}"]`)
-    if (fila) {
-        fila.querySelector("td:nth-child(1)").textContent = nuevoNombre
-        fila.querySelector("td:nth-child(2)").textContent = nuevoTelefono
-        fila.querySelector("td:nth-child(3)").textContent = nuevaEmpresa
-    }
-}
+import { modificarCliente} from './basededatos.js'
+import {actualizarFilaEnTabla} from './nuevocliente.js'
 
 document.addEventListener("DOMContentLoaded", () => {
 

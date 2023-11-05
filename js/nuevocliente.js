@@ -161,6 +161,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const numeroAleatorio = Math.floor(Math.random() * 10000) 
         return `${timestamp}-${numeroAleatorio}`
     }
+
+    function actualizarFilaEnTabla(idCliente, nuevoNombre, nuevoTelefono, nuevaEmpresa) {
+        const fila = document.querySelector(`tr[data-id="${idCliente}"]`);
+        if (fila) {
+            fila.querySelector("td:nth-child(1)").textContent = nuevoNombre;
+            fila.querySelector("td:nth-child(2)").textContent = nuevoTelefono;
+            fila.querySelector("td:nth-child(3)").textContent = nuevaEmpresa;
+        }
+    }
     
     function regresarClienteAlHtml(cliente) {
         const fila = document.createElement("tr")
@@ -391,3 +400,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 })
+
+export {actualizarFilaEnTabla}
