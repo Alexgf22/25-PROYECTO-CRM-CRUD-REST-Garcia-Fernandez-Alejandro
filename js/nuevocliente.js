@@ -1,4 +1,4 @@
-import { agregarCliente } from './basededatos.js'
+import { agregarCliente, eliminarCliente } from './basededatos.js'
 
 var listadoClientes = []
 
@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (clienteOBJ.nombre !== "" && clienteOBJ.email !== "" && clienteOBJ.telefono !== "" && clienteOBJ.empresa !== "") {
             const fila = document.createElement("tr")
+            fila.dataset.id = id
         
             const nombreCliente = document.createElement("td")
             nombreCliente.textContent = clienteOBJ.nombre
@@ -127,12 +128,17 @@ document.addEventListener("DOMContentLoaded", () => {
             botonBorrar.addEventListener("click", (e) => {
                 const fila = e.target.parentElement.parentElement.parentElement
                 const indiceFila = fila.rowIndex - 1
-
-                // Eliminamos el cliente de la lista y del DOM
-                listadoClientes.splice(indiceFila, 1)
+                const idCliente = fila.dataset.id
+                console.log("ID del cliente a eliminar:", idCliente)
+                eliminarCliente(idCliente)
+                
+                //listadoClientes = listadoClientes.filter(cliente => cliente.id !== idCliente)
                 fila.remove()
+                
+                listadoClientes.splice(indiceFila, 1)
                 localStorage.setItem("Clientes", JSON.stringify(listadoClientes))
-            }) 
+            })
+            
 
             contenedorBotones.appendChild(botonEditar)
             contenedorBotones.appendChild(espacio)
@@ -158,7 +164,6 @@ document.addEventListener("DOMContentLoaded", () => {
             comprobarFormulario()
 
             localStorage.setItem("Clientes", JSON.stringify(listadoClientes))
-            console.log(listadoClientes)
         }
     }
 

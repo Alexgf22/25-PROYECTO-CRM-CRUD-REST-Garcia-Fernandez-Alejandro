@@ -8,7 +8,7 @@ request.onupgradeneeded = function(event) {
   const objectStore = db.createObjectStore('clientes', { keyPath: 'id' })
 
   objectStore.createIndex('nombre', 'nombre', { unique: false })
-  objectStore.createIndex('email', 'email', { unique: true })
+  objectStore.createIndex('email', 'email', { unique: false })
   objectStore.createIndex('telefono', 'telefono', { unique: false })
   objectStore.createIndex('empresa', 'empresa', { unique: false })
 }
@@ -21,17 +21,6 @@ request.onsuccess = function(event) {
     return
   }
 
-  //agregarCliente({ id: 1, nombre: 'Max', email: 'maxvers12@gmail.com', telefono: '123456789', empresa: 'Mako' })
-  //agregarCliente({ id: 2, nombre: 'Pedro', email: 'pedrito22@gmail.com', telefono: '123456789', empresa: 'Maki' })
-  //agregarCliente({ id: 3, nombre: 'Julio', email: 'julito22@gmail.com', telefono: '123456789', empresa: 'Maki' })
-
-  //modificarCliente(1, 'Magic Alonso', 'theMagic@example.com', '987654321', 'XYZ Inc.')
-
-  //eliminarCliente(2)
-  //eliminarCliente(3)
-  //modificarCliente(1, 'Hamilton', 'incredible12@example.com', '667345890', 'Ynd ISQ.')
-  //agregarCliente({ id: 2, nombre: 'Checo Perez', email: 'checho22@gmail.com', telefono: '123456789', empresa: 'Maki' })
-
   /*obtenerClientes(function(clientes) {
     console.log(clientes)
   })
@@ -43,34 +32,15 @@ request.onerror = function(event) {
 }
 
 function agregarCliente(cliente) {
-  const transaction = db.transaction(['clientes'], 'readwrite')
-  const objectStore = transaction.objectStore('clientes')
+  let transaction = db.transaction(["clientes"], "readwrite")
+  let objectStore = transaction.objectStore("clientes")
 
-  const clienteID = cliente.id
-
-  const getRequest = objectStore.get(clienteID)
-
-  getRequest.onsuccess = function(event) {
-    const existingCliente = event.target.result
-
-    if (!existingCliente) {
-      const addRequest = objectStore.add(cliente)
-
-      addRequest.onsuccess = function(event) {
-        const nuevoClienteID = event.target.result
-        console.log('Cliente añadido correctamente. ID:', nuevoClienteID)
-      }
-
-      addRequest.onerror = function(event) {
-        console.error('Error al añadir el cliente:', event.target.errorCode)
-      }
-    } else {
-      console.error('No se puede agregar el cliente, ya existe un cliente con el ID ' + clienteID)
-    }
+  let addRequest = objectStore.add(cliente)
+  addRequest.onsuccess = function(event) {
+    console.log("Cliente añadido correctamente. ID:", event.target.result)
   }
-
-  getRequest.onerror = function(event) {
-    console.error('Error al comprobar el cliente:', event.target.errorCode)
+  addRequest.onerror = function(event) {
+    console.error("Error al añadir el cliente:", event.target.error)
   }
 }
 
@@ -122,18 +92,19 @@ function obtenerClientes(callback) {
 }
 
 function eliminarCliente(id) {
-  const transaction = db.transaction(['clientes'], 'readwrite')
-  const objectStore = transaction.objectStore('clientes')
+  let transaction = db.transaction(["clientes"], "readwrite")
+  let objectStore = transaction.objectStore("clientes")
 
-  const deleteRequest = objectStore.delete(id)
+  let request = objectStore.delete(id)
 
-  deleteRequest.onsuccess = function(event) {
-    console.log('Cliente eliminado correctamente.')
-  }
+  request.onsuccess = function(event) {
+      console.log("Cliente eliminado correctamente")
+  };
 
-  deleteRequest.onerror = function(event) {
-    console.error('Error al eliminar el cliente:', event.target.errorCode)
+  request.onerror = function(event) {
+      console.error("Error al eliminar el cliente:", event.target.error)
   }
 }
+
 
 export{agregarCliente, modificarCliente, eliminarCliente, obtenerClientes}
