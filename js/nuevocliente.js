@@ -10,6 +10,15 @@ let clienteOBJ = {
     empresa: ""
 }
 
+function actualizarFilaEnTabla(idCliente, nuevoNombre, nuevoTelefono, nuevaEmpresa) {
+    const fila = document.querySelector(`tr[data-id="${idCliente}"]`)
+    if (fila) {
+        fila.querySelector("td:nth-child(1)").textContent = nuevoNombre
+        fila.querySelector("td:nth-child(2)").textContent = nuevoTelefono
+        fila.querySelector("td:nth-child(3)").textContent = nuevaEmpresa
+    }
+}
+
 // Selectores y Listeners
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -162,15 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return `${timestamp}-${numeroAleatorio}`
     }
 
-    function actualizarFilaEnTabla(idCliente, nuevoNombre, nuevoTelefono, nuevaEmpresa) {
-        const fila = document.querySelector(`tr[data-id="${idCliente}"]`);
-        if (fila) {
-            fila.querySelector("td:nth-child(1)").textContent = nuevoNombre;
-            fila.querySelector("td:nth-child(2)").textContent = nuevoTelefono;
-            fila.querySelector("td:nth-child(3)").textContent = nuevaEmpresa;
-        }
-    }
-    
     function regresarClienteAlHtml(cliente) {
         const fila = document.createElement("tr")
         
@@ -397,8 +397,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return regex.test(empresa)
     }
 
-
+    
 
 })
 
-export {actualizarFilaEnTabla}
+export{actualizarFilaEnTabla}
+
