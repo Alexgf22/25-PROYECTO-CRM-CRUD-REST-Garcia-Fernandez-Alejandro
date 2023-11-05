@@ -97,20 +97,10 @@ document.addEventListener("DOMContentLoaded", () => {
             botonEditar.classList.add("font-bold")
 
             botonEditar.addEventListener("click", (e) => {
-                // Obtener los datos del cliente seleccionado
-                const nombre = clienteOBJ.nombre
-                const email = clienteOBJ.email
-                const telefono = clienteOBJ.telefono
-                const empresa = clienteOBJ.empresa
-            
-                // Almacenar los datos en sessionStorage
-                sessionStorage.setItem('clienteNombre', nombre)
-                sessionStorage.setItem('clienteEmail', email)
-                sessionStorage.setItem('clienteTelefono', telefono)
-                sessionStorage.setItem('clienteEmpresa', empresa)
-            
-                // Redirigir al usuario a la página de edición
-                window.location.href = `editar-cliente.html`
+                const idCliente = copiaClienteOBJ.id
+                
+                const url = `editar-cliente.html?id=${idCliente}`
+                window.location.href = url
             })
             
             const espacio = document.createTextNode(" ")
@@ -132,7 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("ID del cliente a eliminar:", idCliente)
                 eliminarCliente(idCliente)
                 
-                //listadoClientes = listadoClientes.filter(cliente => cliente.id !== idCliente)
                 fila.remove()
                 
                 listadoClientes.splice(indiceFila, 1)
@@ -203,20 +192,15 @@ document.addEventListener("DOMContentLoaded", () => {
         botonEditar.classList.add("font-bold")
 
         botonEditar.addEventListener("click", (e) => {
-            // Obtener los datos del cliente seleccionado
             const nombre = cliente.nombre
             const email = cliente.email
             const telefono = cliente.telefono
             const empresa = cliente.empresa
         
-            // Almacenar los datos en sessionStorage
-            sessionStorage.setItem('clienteNombre', nombre)
-            sessionStorage.setItem('clienteEmail', email)
-            sessionStorage.setItem('clienteTelefono', telefono)
-            sessionStorage.setItem('clienteEmpresa', empresa)
+            // Construir la URL con los parámetros
+            const url = `editar-cliente.html?nombre=${nombre}&email=${email}&telefono=${telefono}&empresa=${empresa}`
         
-            // Redirigir al usuario a la página de edición
-            window.location.href = `editar-cliente.html`
+            window.location.href = url
         })
         
         const espacio = document.createTextNode(" ")

@@ -99,7 +99,7 @@ function eliminarCliente(id) {
 
   request.onsuccess = function(event) {
       console.log("Cliente eliminado correctamente")
-  };
+  }
 
   request.onerror = function(event) {
       console.error("Error al eliminar el cliente:", event.target.error)
