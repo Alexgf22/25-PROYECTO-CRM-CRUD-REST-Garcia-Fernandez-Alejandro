@@ -104,20 +104,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!nombreEsValido) {
             mostrarAlerta("Nombre inválido", nombreInput)
+        } else {
+            limpiarAlerta(nombreInput)
         }
-    
+        
         if (!emailEsValido) {
             mostrarAlerta("Email inválido", emailInput)
+        } else {
+            limpiarAlerta(emailInput)
         }
-    
+        
         if (!telefonoEsValido) {
             mostrarAlerta("Teléfono inválido", telefonoInput)
+        } else {
+            limpiarAlerta(telefonoInput)
         }
-    
+        
         if (!empresaEsValida) {
             mostrarAlerta("Empresa inválida", empresaInput)
+        } else {
+            limpiarAlerta(empresaInput)
         }
-
+        
         if (formularioEsValido) {
             btnGuardarCambios.classList.remove("opacity-50")
             btnGuardarCambios.disabled = false
@@ -174,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const error = document.createElement("p")
         error.textContent = mensaje
         error.classList.add("bg-red-600", "text-center", "text-white", "p-2")
-        referencia.parentNode.appendChild(error)
+        referencia.appendChild(error)
     }
 
 })
