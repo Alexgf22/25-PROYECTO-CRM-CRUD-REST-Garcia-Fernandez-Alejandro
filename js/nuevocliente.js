@@ -36,12 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnSubmit.disabled = true
     btnSubmit.classList.add("opacity-50")
 
-    if (localStorage.getItem('Clientes')) {
-        listadoClientes = JSON.parse(localStorage.getItem('Clientes'))
-        listadoClientes.forEach(cliente => {
-            regresarClienteAlHtml(cliente)
-        })
-    }
+    cargarClientesDesdeDB()
 
     // Listeners
     btnSubmit.addEventListener("click", () => {
@@ -106,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
             botonEditar.classList.add("font-bold")
 
             botonEditar.addEventListener("click", (e) => {
-                const idCliente = copiaClienteOBJ.id
+                const idCliente = fila.dataset.id
                 
                 const url = `editar-cliente.html?id=${idCliente}`
                 window.location.href = url
@@ -171,6 +166,30 @@ document.addEventListener("DOMContentLoaded", () => {
         return `${timestamp}-${numeroAleatorio}`
     }
 
+    function cargarClientesDesdeDB() {
+        const request = indexedDB.open('MiBaseDeDatos', 1)
+
+        request.onsuccess = function(event) {
+            const db = event.target.result
+            const transaction = db.transaction(['clientes'], 'readonly')
+            const objectStore = transaction.objectStore('clientes')
+            const getAllRequest = objectStore.getAll()
+
+            getAllRequest.onsuccess = function(event) {
+                const clientes = event.target.result
+                if (clientes && clientes.length > 0) {
+                    clientes.forEach(cliente => {
+                        regresarClienteAlHtml(cliente)
+                    })
+                }
+            }
+        }
+
+        request.onerror = function(event) {
+            console.error('Error al abrir la base de datos:', event.target.errorCode)
+        }
+    }
+
     function regresarClienteAlHtml(cliente) {
         const fila = document.createElement("tr")
         
@@ -201,14 +220,9 @@ document.addEventListener("DOMContentLoaded", () => {
         botonEditar.classList.add("font-bold")
 
         botonEditar.addEventListener("click", (e) => {
-            const nombre = cliente.nombre
-            const email = cliente.email
-            const telefono = cliente.telefono
-            const empresa = cliente.empresa
-        
-            // Construir la URL con los parámetros
-            const url = `editar-cliente.html?nombre=${nombre}&email=${email}&telefono=${telefono}&empresa=${empresa}`
-        
+            const idCliente = fila.dataset.id
+            
+            const url = `editar-cliente.html?id=${idCliente}`
             window.location.href = url
         })
         

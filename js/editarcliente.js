@@ -84,10 +84,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function obtenerIdClienteDesdeURL() {
-    const params = new URLSearchParams(window.location.search)
-    const idCliente = params.get('id')
-    return idCliente
+        const params = new URLSearchParams(window.location.search)
+        const idCliente = params.get('id')
+        console.log('ID del cliente desde URL:', idCliente);
+        return idCliente
     }
+    
 
     function validarFormulario() {
         const nuevoNombre = nombreInput.value
@@ -106,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
             mostrarAlerta("Nombre inválido", nombreInput)
         } else {
             limpiarAlerta(nombreInput)
-        }
+        } 
         
         if (!emailEsValido) {
             mostrarAlerta("Email inválido", emailInput)
@@ -118,13 +120,13 @@ document.addEventListener("DOMContentLoaded", () => {
             mostrarAlerta("Teléfono inválido", telefonoInput)
         } else {
             limpiarAlerta(telefonoInput)
-        }
+        } 
         
         if (!empresaEsValida) {
             mostrarAlerta("Empresa inválida", empresaInput)
         } else {
             limpiarAlerta(empresaInput)
-        }
+        } 
         
         if (formularioEsValido) {
             btnGuardarCambios.classList.remove("opacity-50")
