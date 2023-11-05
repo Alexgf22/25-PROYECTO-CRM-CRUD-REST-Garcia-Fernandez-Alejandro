@@ -1,3 +1,5 @@
+import { agregarCliente } from './basededatos.js'
+
 var listadoClientes = []
 
 // Objeto con los datos del cliente
@@ -61,6 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Funciones
     function anadirHTML() {
+
+        const id = generarIdUnico()
 
         if (clienteOBJ.nombre !== "" && clienteOBJ.email !== "" && clienteOBJ.telefono !== "" && clienteOBJ.empresa !== "") {
             const fila = document.createElement("tr")
@@ -140,11 +144,11 @@ document.addEventListener("DOMContentLoaded", () => {
         
             tablaDeClientes.appendChild(fila)
 
-            let copiaClienteOBJ = { ...clienteOBJ }
+            let copiaClienteOBJ = { ...clienteOBJ, id }
 
             listadoClientes.push(copiaClienteOBJ)
 
-            //añadirCliente(copiaClienteOBJ)
+            agregarCliente(copiaClienteOBJ)
 
             clienteOBJ.nombre = ""
             clienteOBJ.email = ""
@@ -156,6 +160,12 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("Clientes", JSON.stringify(listadoClientes))
             console.log(listadoClientes)
         }
+    }
+
+    function generarIdUnico() {
+        const timestamp = Date.now()
+        const numeroAleatorio = Math.floor(Math.random() * 10000) 
+        return `${timestamp}-${numeroAleatorio}`
     }
     
     function regresarClienteAlHtml(cliente) {
@@ -356,15 +366,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function validarEmail(email) {
-        regex = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/
-        resultado = regex.test(email)
-        return resultado
+        const regex = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/
+        return regex.test(email)
     }
 
     function validarTelefono(telefono) {
-        regex = /^[0-9]{9}$/
-        resultado = regex.test(telefono)
-        return resultado
+        const regex = /^[0-9]{9}$/
+        return regex.test(telefono)
     }
 
     function validarNombre(nombre) {

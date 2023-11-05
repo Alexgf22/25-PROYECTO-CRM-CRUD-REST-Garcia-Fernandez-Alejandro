@@ -21,20 +21,21 @@ request.onsuccess = function(event) {
     return
   }
 
-  agregarCliente({ id: 1, nombre: 'Max', email: 'maxvers12@gmail.com', telefono: '123456789', empresa: 'Mako' })
-  agregarCliente({ id: 2, nombre: 'Pedro', email: 'pedrito22@gmail.com', telefono: '123456789', empresa: 'Maki' })
-  agregarCliente({ id: 3, nombre: 'Julio', email: 'julito22@gmail.com', telefono: '123456789', empresa: 'Maki' })
+  //agregarCliente({ id: 1, nombre: 'Max', email: 'maxvers12@gmail.com', telefono: '123456789', empresa: 'Mako' })
+  //agregarCliente({ id: 2, nombre: 'Pedro', email: 'pedrito22@gmail.com', telefono: '123456789', empresa: 'Maki' })
+  //agregarCliente({ id: 3, nombre: 'Julio', email: 'julito22@gmail.com', telefono: '123456789', empresa: 'Maki' })
 
-  modificarCliente(1, 'Magic Alonso', 'theMagic@example.com', '987654321', 'XYZ Inc.')
+  //modificarCliente(1, 'Magic Alonso', 'theMagic@example.com', '987654321', 'XYZ Inc.')
 
-  eliminarCliente(2)
-  eliminarCliente(3)
-  modificarCliente(1, 'Hamilton', 'incredible12@example.com', '667345890', 'Ynd ISQ.')
-  agregarCliente({ id: 2, nombre: 'Checo Perez', email: 'checho22@gmail.com', telefono: '123456789', empresa: 'Maki' })
+  //eliminarCliente(2)
+  //eliminarCliente(3)
+  //modificarCliente(1, 'Hamilton', 'incredible12@example.com', '667345890', 'Ynd ISQ.')
+  //agregarCliente({ id: 2, nombre: 'Checo Perez', email: 'checho22@gmail.com', telefono: '123456789', empresa: 'Maki' })
 
-  obtenerClientes(function(clientes) {
+  /*obtenerClientes(function(clientes) {
     console.log(clientes)
   })
+  */
 }
 
 request.onerror = function(event) {
@@ -134,3 +135,5 @@ function eliminarCliente(id) {
     console.error('Error al eliminar el cliente:', event.target.errorCode)
   }
 }
+
+export{agregarCliente, modificarCliente, eliminarCliente, obtenerClientes}
